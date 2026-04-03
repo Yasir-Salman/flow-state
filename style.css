@@ -1,0 +1,631 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0d0d0d;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+#app {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ── App Title ── */
+.app-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #e8a0bf, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Setup Screen ── */
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 24px;
+  gap: 40px;
+}
+
+.setup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setup-subtitle {
+  font-size: 16px;
+  color: #888;
+}
+
+.setup-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 14px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: #666;
+}
+
+.field-input {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: white;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.field-input:focus {
+  border-color: #e8a0bf;
+}
+
+/* date input fix */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+/* Cycle Length Stepper */
+.cycle-length-control {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cycle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+
+.cycle-btn:hover {
+  border-color: #e8a0bf;
+}
+
+.cycle-length-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #e8a0bf;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Primary Button */
+.primary-btn {
+  background: linear-gradient(90deg, #e8a0bf, #a78bfa);
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.2s;
+}
+
+.primary-btn:hover {
+  opacity: 0.9;
+}
+
+/* ── Top Bar ── */
+.top-bar {
+  padding: 24px 20px 16px;
+}
+
+/* ── Bottom Nav ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  background: #111;
+  border-top: 1px solid #1e1e1e;
+  padding: 10px 0 14px;
+}
+
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s;
+}
+
+.nav-btn.active {
+  color: #e8a0bf;
+  font-weight: 600;
+}
+/* ── Home Screen ── */
+.home-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 20px 100px;
+}
+
+.home-greeting {
+  font-size: 14px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* Cycle Ring */
+.cycle-ring-container {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.cycle-ring {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 4px solid #e8a0bf;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  transition: border-color 0.4s;
+}
+
+.cycle-day-label {
+  font-size: 11px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.cycle-day-number {
+  font-size: 48px;
+  font-weight: 700;
+  color: #e8a0bf;
+  line-height: 1;
+  transition: color 0.4s;
+}
+
+.cycle-phase {
+  font-size: 13px;
+  color: #ccc;
+  text-transform: capitalize;
+}
+
+/* Badges */
+.badges-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+  display: none;
+}
+
+.badge.fertile {
+  background: #1a2e1a;
+  color: #86efac;
+  border: 1px solid #86efac44;
+}
+
+.badge.pms {
+  background: #1e1a2e;
+  color: #a78bfa;
+  border: 1px solid #a78bfa44;
+}
+
+/* Cards */
+.daily-card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.daily-title {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.daily-prediction {
+  font-size: 16px;
+  color: #f0f0f0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.message-card {
+  background: linear-gradient(135deg, #1a1025, #1a1a2e);
+  border-radius: 16px;
+  padding: 18px 20px;
+  border: 1px solid #2a2a3a;
+}
+
+.daily-message {
+  font-size: 15px;
+  color: #c4b5fd;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.streak-card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.streak-label {
+  font-size: 14px;
+  color: #888;
+}
+
+.streak-count {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e8a0bf;
+}
+
+/* ── Log Screen ── */
+.log-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 20px 100px;
+}
+
+.screen-subtitle {
+  font-size: 14px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.log-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.log-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.log-hint {
+  font-size: 11px;
+  color: #555;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: #aaa;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chip:hover {
+  border-color: #e8a0bf;
+  color: #e8a0bf;
+}
+
+.chip.selected {
+  background: #2a1a2a;
+  border-color: #e8a0bf;
+  color: #e8a0bf;
+  font-weight: 600;
+}
+
+.log-saved-msg {
+  text-align: center;
+  font-size: 14px;
+  color: #86efac;
+  margin-top: -8px;
+}
+
+/* ── Insights Screen ── */
+.insights-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 20px 100px;
+}
+
+.insight-card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insight-card-label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.insight-phase-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e8a0bf;
+  text-transform: capitalize;
+}
+
+.insight-phase-desc {
+  font-size: 14px;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+/* Cycle Progress Bar */
+.cycle-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.cycle-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e8a0bf, #a78bfa);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.cycle-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #555;
+}
+
+/* Highlight Cards */
+.highlight-card {
+  background: #1a1a1a;
+}
+
+.insight-highlight-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #a78bfa;
+}
+
+.insight-highlight-sub {
+  font-size: 13px;
+  color: #888;
+}
+
+/* PMS Card */
+.pms-card {
+  background: #1e1a2e;
+  border: 1px solid #a78bfa44;
+}
+
+/* Tips List */
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 4px;
+  list-style: none;
+}
+
+.tips-list li {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.5;
+  padding-left: 12px;
+  border-left: 2px solid #e8a0bf44;
+}
+
+/* ── Settings Screen ── */
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 24px 20px 100px;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Danger Zone */
+.danger-section {
+  background: #1a1010;
+  border: 1px solid #3a1a1a;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.settings-danger-desc {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.6;
+}
+
+.danger-btn {
+  background: transparent;
+  border: 1px solid #ef4444;
+  border-radius: 14px;
+  padding: 14px;
+  color: #ef4444;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.danger-btn:hover {
+  background: #ef444422;
+}
+
+/* ── Notifications Toggle ── */
+.settings-toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a1a1a;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.toggle-label {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 4px;
+}
+
+.toggle-btn {
+  background: linear-gradient(90deg, #e8a0bf, #a78bfa);
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.toggle-btn.enabled {
+  background: #2a2a2a;
+  color: #666;
+}
+
+.notif-status {
+  font-size: 12px;
+  color: #666;
+}
+
+/* ── Notification Info List ── */
+.notif-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #1a1a1a;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.notif-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.notif-info-icon {
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.notif-info-label {
+  font-size: 13px;
+  color: #ccc;
+  font-weight: 500;
+  margin-bottom: 2px;
+}

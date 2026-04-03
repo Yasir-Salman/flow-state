@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flow State</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#e8a0bf" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+
+      <!-- Setup Screen -->
+      <div id="setup-screen" class="screen">
+        <div class="setup-container">
+          <div class="setup-header">
+            <h1 class="app-title">Flow State</h1>
+            <p class="setup-subtitle">Let's get you set up</p>
+          </div>
+
+          <div class="setup-fields">
+            <div class="field-group">
+              <label class="field-label">What's your name?</label>
+              <input
+                type="text"
+                id="setup-name"
+                class="field-input"
+                placeholder="Aelya"
+              />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">When did your last period start?</label>
+              <input
+                type="date"
+                id="setup-date"
+                class="field-input"
+              />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">How long is your usual cycle?</label>
+              <p class="field-hint">Most cycles are 28 days. Adjust if yours differs.</p>
+              <div class="cycle-length-control">
+                <button class="cycle-btn" id="cycle-minus">−</button>
+                <span class="cycle-length-value" id="cycle-length-display">28</span>
+                <button class="cycle-btn" id="cycle-plus">+</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="primary-btn" id="setup-submit">Let's go →</button>
+        </div>
+      </div>
+
+      <!-- Home Screen -->
+      <div id="home-screen" class="screen hidden">
+        <div class="home-content">
+
+          <div class="top-bar">
+            <h1 class="app-title">Flow State</h1>
+            <p class="home-greeting" id="home-greeting"></p>
+          </div>
+
+          <div class="cycle-ring-container">
+            <div class="cycle-ring">
+              <p class="cycle-day-label">Day</p>
+              <p class="cycle-day-number" id="cycle-day">--</p>
+              <p class="cycle-phase" id="cycle-phase">--</p>
+            </div>
+          </div>
+
+          <div class="badges-row">
+            <div class="badge fertile" id="fertile-badge">🌸 You can get Pregnant today</div>
+            <div class="badge pms" id="pms-badge">🌙 PMS Zone</div>
+          </div>
+
+          <div class="daily-card">
+            <p class="daily-title">Today you might feel</p>
+            <p class="daily-prediction" id="daily-prediction">--</p>
+          </div>
+
+          <div class="message-card">
+            <p class="daily-message" id="daily-message">--</p>
+          </div>
+
+          <div class="streak-card">
+            <p class="streak-label">🔥 Logging streak</p>
+            <p class="streak-count"><span id="streak-count">0</span> days</p>
+          </div>
+
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-btn active" onclick="showScreen('home-screen')">Home</button>
+          <button class="nav-btn" onclick="showScreen('log-screen')">Log</button>
+          <button class="nav-btn" onclick="showScreen('insights-screen')">Insights</button>
+          <button class="nav-btn" onclick="showScreen('settings-screen')">Settings</button>
+        </div>
+      </div>
+
+      <!-- Log Screen -->
+      <div id="log-screen" class="screen hidden">
+        <div class="log-content">
+
+          <div class="top-bar">
+            <h1 class="app-title">Flow State</h1>
+            <p class="screen-subtitle">How are you feeling today?</p>
+          </div>
+
+          <!-- Flow Intensity -->
+          <div class="log-section">
+            <p class="log-section-title">Flow</p>
+            <div class="chip-row" id="flow-chips">
+              <button class="chip" data-group="flow" data-value="none">None</button>
+              <button class="chip" data-group="flow" data-value="spotting">Spotting</button>
+              <button class="chip" data-group="flow" data-value="light">Light</button>
+              <button class="chip" data-group="flow" data-value="medium">Medium</button>
+              <button class="chip" data-group="flow" data-value="heavy">Heavy</button>
+            </div>
+          </div>
+
+          <!-- Mood -->
+          <div class="log-section">
+            <p class="log-section-title">Mood</p>
+            <div class="chip-row" id="mood-chips">
+              <button class="chip" data-group="mood" data-value="happy">😊 Happy</button>
+              <button class="chip" data-group="mood" data-value="calm">😌 Calm</button>
+              <button class="chip" data-group="mood" data-value="moody">🌧️ Moody</button>
+              <button class="chip" data-group="mood" data-value="irritable">😤 Gussa</button>
+              <button class="chip" data-group="mood" data-value="wantboyfriend">🥺 Want to talk to boyfrienddd</button>
+              <button class="chip" data-group="mood" data-value="anxious">😰 Anxious</button>
+              <button class="chip" data-group="mood" data-value="sad">😔 Yasir im sad</button>
+              <button class="chip" data-group="mood" data-value="energetic">⚡ Energetic</button>
+            </div>
+          </div>
+
+          <!-- Symptoms -->
+          <div class="log-section">
+            <p class="log-section-title">Symptoms <span class="log-hint">(select all that apply)</span></p>
+            <div class="chip-row" id="symptom-chips">
+              <button class="chip multi" data-group="symptoms" data-value="paitdard">🔴 Pait mein dard ho raha hai!!</button>
+              <button class="chip multi" data-group="symptoms" data-value="thakan">😮‍💨 mein thak gayi</button>
+              <button class="chip multi" data-group="symptoms" data-value="bistarh">🛏️ i wanna sleep</button>
+              <button class="chip multi" data-group="symptoms" data-value="headache">🤕 Headache</button>
+              <button class="chip multi" data-group="symptoms" data-value="bloating">💨 Bloating</button>
+              <button class="chip multi" data-group="symptoms" data-value="nausea">🤢 Nausea</button>
+              <button class="chip multi" data-group="symptoms" data-value="backache">💢 Backache</button>
+              <button class="chip multi" data-group="symptoms" data-value="none">✅ theek hun</button>
+            </div>
+          </div>
+
+          <!-- Sleep -->
+          <div class="log-section">
+            <p class="log-section-title">Sleep Quality</p>
+            <div class="chip-row" id="sleep-chips">
+              <button class="chip" data-group="sleep" data-value="great">🌟 Great</button>
+              <button class="chip" data-group="sleep" data-value="good">😊 Good</button>
+              <button class="chip" data-group="sleep" data-value="okay">😐 meh</button>
+              <button class="chip" data-group="sleep" data-value="wokeup">💔 Raat ko uthna para kuch dafa. Boyfriend didnt reply</button>
+              <button class="chip" data-group="sleep" data-value="wantedboyfriend">📱 Up at 3am, texted boyfrienddd</button>
+              <button class="chip" data-group="sleep" data-value="poor">😣 Poor</button>
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <button class="primary-btn" id="save-log-btn">Save Today's Log</button>
+          <p class="log-saved-msg hidden" id="log-saved-msg">✓ Logged for today</p>
+
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-btn" onclick="showScreen('home-screen')">Home</button>
+          <button class="nav-btn active" onclick="showScreen('log-screen')">Log</button>
+          <button class="nav-btn" onclick="showScreen('insights-screen')">Insights</button>
+          <button class="nav-btn" onclick="showScreen('settings-screen')">Settings</button>
+        </div>
+      </div>     
+
+      <!-- Insights Screen -->
+      <div id="insights-screen" class="screen hidden">
+        <div class="insights-content">
+
+          <div class="top-bar">
+            <h1 class="app-title">Flow State</h1>
+            <p class="screen-subtitle">What's going on inside</p>
+          </div>
+
+          <!-- Current Phase Card -->
+          <div class="insight-card phase-card">
+            <p class="insight-card-label">Current Phase</p>
+            <p class="insight-phase-name" id="insight-phase-name">--</p>
+            <p class="insight-phase-desc" id="insight-phase-desc">--</p>
+          </div>
+
+          <!-- Cycle Progress Bar -->
+          <div class="insight-card">
+            <p class="insight-card-label">Cycle Progress</p>
+            <div class="cycle-progress-bar">
+              <div class="cycle-progress-fill" id="cycle-progress-fill"></div>
+            </div>
+            <div class="cycle-progress-labels">
+              <span>Day 1</span>
+              <span id="cycle-progress-day">Day --</span>
+              <span id="cycle-progress-end">Day --</span>
+            </div>
+          </div>
+
+          <!-- Next Period -->
+          <div class="insight-card highlight-card" id="next-period-card">
+            <p class="insight-card-label">Next Period</p>
+            <p class="insight-highlight-value" id="next-period-days">--</p>
+            <p class="insight-highlight-sub" id="next-period-date">--</p>
+          </div>
+
+          <!-- Fertile Window -->
+          <div class="insight-card highlight-card" id="fertile-card">
+            <p class="insight-card-label">Fertile Window</p>
+            <p class="insight-highlight-value" id="fertile-status">--</p>
+            <p class="insight-highlight-sub" id="fertile-dates">--</p>
+          </div>
+
+          <!-- PMS Warning -->
+          <div class="insight-card pms-card hidden" id="pms-card">
+            <p class="insight-card-label">🌙 PMS Zone</p>
+            <p class="insight-phase-desc">Your period is coming in the next few days. Be extra kind to yourself — mood dips and fatigue are normal right now.</p>
+          </div>
+
+          <!-- Phase Tips -->
+          <div class="insight-card">
+            <p class="insight-card-label">Tips for today</p>
+            <ul class="tips-list" id="tips-list"></ul>
+          </div>
+
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-btn" onclick="showScreen('home-screen')">Home</button>
+          <button class="nav-btn" onclick="showScreen('log-screen')">Log</button>
+          <button class="nav-btn active" onclick="showScreen('insights-screen')">Insights</button>
+          <button class="nav-btn" onclick="showScreen('settings-screen')">Settings</button>
+        </div>
+      </div>
+
+      <!-- Settings Screen -->
+      <div id="settings-screen" class="screen hidden">
+        <div class="settings-content">
+
+          <div class="top-bar">
+            <h1 class="app-title">Flow State</h1>
+            <p class="screen-subtitle">Your preferences</p>
+          </div>
+
+          <!-- Profile Section -->
+          <div class="settings-section">
+            <p class="settings-section-title">Profile</p>
+
+            <div class="settings-field">
+              <label class="field-label">Your name</label>
+              <input type="text" id="settings-name" class="field-input" />
+            </div>
+
+            <div class="settings-field">
+              <label class="field-label">Last period start date</label>
+              <input type="date" id="settings-date" class="field-input" />
+            </div>
+
+            <div class="settings-field">
+              <label class="field-label">Cycle length</label>
+              <p class="field-hint">Average number of days in your cycle</p>
+              <div class="cycle-length-control">
+                <button class="cycle-btn" id="settings-cycle-minus">−</button>
+                <span class="cycle-length-value" id="settings-cycle-display">28</span>
+                <button class="cycle-btn" id="settings-cycle-plus">+</button>
+              </div>
+            </div>
+
+            <button class="primary-btn" id="settings-save-btn">Save Changes</button>
+            <p class="log-saved-msg hidden" id="settings-saved-msg">✓ Changes saved</p>
+          </div>
+
+
+          <!-- Notifications Section -->
+          <div class="settings-section">
+            <p class="settings-section-title">Notifications</p>
+
+            <!-- Master enable -->
+            <div class="settings-toggle-row">
+              <div>
+                <p class="toggle-label">Enable notifications</p>
+                <p class="field-hint">Allow Flow State to send you reminders</p>
+              </div>
+              <button class="toggle-btn" id="notif-toggle">Enable</button>
+            </div>
+            <p class="notif-status" id="notif-status"></p>
+
+            <!-- Log reminder time -->
+            <div class="settings-field">
+              <label class="field-label">Log reminder time</label>
+              <p class="field-hint">When should we remind you to log your day?</p>
+              <input type="time" id="notif-log-time" class="field-input" value="22:00" />
+            </div>
+
+            <!-- What you'll get -->
+            <div class="notif-info-list">
+              <div class="notif-info-row">
+                <span class="notif-info-icon">🌸</span>
+                <div>
+                  <p class="notif-info-label">Morning quote</p>
+                  <p class="field-hint">Every day at 7:00 AM</p>
+                </div>
+              </div>
+              <div class="notif-info-row">
+                <span class="notif-info-icon">📝</span>
+                <div>
+                  <p class="notif-info-label">Daily log reminder</p>
+                  <p class="field-hint">At your chosen time</p>
+                </div>
+              </div>
+              <div class="notif-info-row">
+                <span class="notif-info-icon">🌙</span>
+                <div>
+                  <p class="notif-info-label">PMS heads up</p>
+                  <p class="field-hint">Every evening at 7:00 PM during PMS zone</p>
+                </div>
+              </div>
+              <div class="notif-info-row">
+                <span class="notif-info-icon">🌺</span>
+                <div>
+                  <p class="notif-info-label">Fertile window alert</p>
+                  <p class="field-hint">Once daily during your fertile window</p>
+                </div>
+              </div>
+            </div>
+
+            <button class="primary-btn" id="notif-save-btn">Save Notification Settings</button>
+            <p class="log-saved-msg hidden" id="notif-saved-msg">✓ Notification settings saved</p>
+          </div>
+          
+          <!-- Danger Zone -->
+          <div class="settings-section danger-section">
+            <p class="settings-section-title">Data</p>
+            <p class="settings-danger-desc">This will delete all your data including logs and cycle history. This cannot be undone.</p>
+            <button class="danger-btn" id="reset-btn">Reset Everything</button>
+          </div>
+
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-btn" onclick="showScreen('home-screen')">Home</button>
+          <button class="nav-btn" onclick="showScreen('log-screen')">Log</button>
+          <button class="nav-btn" onclick="showScreen('insights-screen')">Insights</button>
+          <button class="nav-btn active" onclick="showScreen('settings-screen')">Settings</button>
+        </div>
+      </div>
+
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
