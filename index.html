@@ -59,7 +59,10 @@
         <div class="home-content">
 
           <div class="top-bar">
-            <h1 class="app-title">Flow State</h1>
+            <div class="top-bar-row">
+              <h1 class="app-title">Flow State</h1>
+              <button class="gear-btn" onclick="showScreen('settings-screen')">⚙️</button>
+            </div>
             <p class="home-greeting" id="home-greeting"></p>
           </div>
 
@@ -74,6 +77,13 @@
           <div class="badges-row">
             <div class="badge fertile" id="fertile-badge">🌸 You can get Pregnant today</div>
             <div class="badge pms" id="pms-badge">🌙 PMS Zone</div>
+          </div>
+
+          <!-- Period Reset Button -->
+          <div class="period-reset-container" id="period-reset-container">
+            <button class="period-reset-btn" id="period-reset-btn">
+              🔴 My period started today
+            </button>
           </div>
 
           <div class="daily-card">
@@ -93,10 +103,10 @@
         </div>
 
         <div class="bottom-nav">
-          <button class="nav-btn active" onclick="showScreen('home-screen')">Home</button>
-          <button class="nav-btn" onclick="showScreen('log-screen')">Log</button>
-          <button class="nav-btn" onclick="showScreen('insights-screen')">Insights</button>
-          <button class="nav-btn" onclick="showScreen('settings-screen')">Settings</button>
+          <button class="nav-btn active" onclick="showScreen('home-screen')">🏠 Home</button>
+          <button class="nav-btn" onclick="showScreen('log-screen')">📝 Log</button>
+          <button class="nav-btn" onclick="showScreen('calendar-screen')">📅 Calendar</button>
+          <button class="nav-btn" onclick="showScreen('insights-screen')">✦ Insights</button>
         </div>
       </div>
 
@@ -164,6 +174,34 @@
             </div>
           </div>
 
+          <!-- Sleep Times -->
+          <div class="log-section">
+            <p class="log-section-title">Sleep Times <span class="log-hint">(optional)</span></p>
+            <div class="sleep-time-row">
+              <div class="sleep-time-field">
+                <label class="field-label">Bedtime</label>
+                <input type="time" id="sleep-bedtime" class="field-input" />
+              </div>
+              <div class="sleep-time-field">
+                <label class="field-label">Woke up</label>
+                <input type="time" id="sleep-waketime" class="field-input" />
+              </div>
+            </div>
+
+            <!-- TS Song Result -->
+            <div class="ts-card hidden" id="ts-card">
+              <div class="ts-card-inner">
+                <img id="ts-album-art" src="" alt="Album Art" class="ts-album-art" />
+                <div class="ts-info">
+                  <p class="ts-label">Your sleep energy matches</p>
+                  <p class="ts-song" id="ts-song">--</p>
+                  <p class="ts-album" id="ts-album">--</p>
+                  <a class="ts-link" id="ts-link" href="#" target="_blank">Open in Spotify →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Save Button -->
           <button class="primary-btn" id="save-log-btn">Save Today's Log</button>
           <p class="log-saved-msg hidden" id="log-saved-msg">✓ Logged for today</p>
@@ -171,10 +209,10 @@
         </div>
 
         <div class="bottom-nav">
-          <button class="nav-btn" onclick="showScreen('home-screen')">Home</button>
-          <button class="nav-btn active" onclick="showScreen('log-screen')">Log</button>
-          <button class="nav-btn" onclick="showScreen('insights-screen')">Insights</button>
-          <button class="nav-btn" onclick="showScreen('settings-screen')">Settings</button>
+          <button class="nav-btn" onclick="showScreen('home-screen')">🏠 Home</button>
+          <button class="nav-btn active" onclick="showScreen('log-screen')">📝 Log</button>
+          <button class="nav-btn" onclick="showScreen('calendar-screen')">📅 Calendar</button>
+          <button class="nav-btn" onclick="showScreen('insights-screen')">✦ Insights</button>
         </div>
       </div>     
 
@@ -236,10 +274,10 @@
         </div>
 
         <div class="bottom-nav">
-          <button class="nav-btn" onclick="showScreen('home-screen')">Home</button>
-          <button class="nav-btn" onclick="showScreen('log-screen')">Log</button>
-          <button class="nav-btn active" onclick="showScreen('insights-screen')">Insights</button>
-          <button class="nav-btn" onclick="showScreen('settings-screen')">Settings</button>
+          <button class="nav-btn" onclick="showScreen('home-screen')">🏠 Home</button>
+          <button class="nav-btn" onclick="showScreen('log-screen')">📝 Log</button>
+          <button class="nav-btn" onclick="showScreen('calendar-screen')">📅 Calendar</button>
+          <button class="nav-btn active" onclick="showScreen('insights-screen')">✦ Insights</button>
         </div>
       </div>
 
@@ -332,6 +370,14 @@
                   <p class="field-hint">Once daily during your fertile window</p>
                 </div>
               </div>
+
+              <div class="notif-info-row">
+                <span class="notif-info-icon">🙄</span>
+                <div>
+                  <p class="notif-info-label">Yasir's lame joke of the day</p>
+                  <p class="field-hint">2-3 times a week, random time</p>
+                </div>
+              </div>
             </div>
 
             <button class="primary-btn" id="notif-save-btn">Save Notification Settings</button>
@@ -348,12 +394,119 @@
         </div>
 
         <div class="bottom-nav">
-          <button class="nav-btn" onclick="showScreen('home-screen')">Home</button>
-          <button class="nav-btn" onclick="showScreen('log-screen')">Log</button>
-          <button class="nav-btn" onclick="showScreen('insights-screen')">Insights</button>
-          <button class="nav-btn active" onclick="showScreen('settings-screen')">Settings</button>
+          <button class="nav-btn" onclick="showScreen('home-screen')">🏠 Home</button>
+          <button class="nav-btn" onclick="showScreen('log-screen')">📝 Log</button>
+          <button class="nav-btn" onclick="showScreen('calendar-screen')">📅 Calendar</button>
+          <button class="nav-btn" onclick="showScreen('insights-screen')">✦ Insights</button>
         </div>
       </div>
+
+
+      <!-- Calendar Screen -->
+      <div id="calendar-screen" class="screen hidden">
+        <div class="calendar-content">
+
+          <div class="top-bar">
+            <h1 class="app-title">Flow State</h1>
+            <p class="screen-subtitle">Plan your cycle</p>
+          </div>
+
+          <!-- AI Advice Card -->
+          <div class="ai-advice-card" id="ai-advice-card">
+            <div class="ai-advice-header">
+              <span class="ai-advice-icon">✦</span>
+              <p class="ai-advice-title">Today's advice</p>
+            </div>
+            <p class="ai-advice-text" id="ai-advice-text">Loading advice...</p>
+          </div>
+
+          <!-- Calendar Header -->
+          <div class="cal-header">
+            <button class="cal-nav-btn" id="cal-prev">‹</button>
+            <p class="cal-month-label" id="cal-month-label">April 2026</p>
+            <button class="cal-nav-btn" id="cal-next">›</button>
+          </div>
+
+          <!-- Day Labels -->
+          <div class="cal-day-labels">
+            <span>Sun</span><span>Mon</span><span>Tue</span>
+            <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+
+          <!-- Calendar Grid -->
+          <div class="cal-grid" id="cal-grid"></div>
+
+          <!-- Day View (replaces event panel) -->
+          <div class="day-view hidden" id="day-view">
+
+            <!-- Day View Header -->
+            <div class="day-view-header">
+              <button class="cal-nav-btn" id="day-prev">‹</button>
+              <div class="day-view-title-block">
+                <p class="day-view-date" id="day-view-date">--</p>
+                <p class="day-view-exam" id="day-view-exam"></p>
+              </div>
+              <button class="cal-nav-btn" id="day-next">›</button>
+            </div>
+
+            <!-- Overload Warning -->
+            <div class="overload-warning hidden" id="overload-warning">
+              <p class="overload-warning-text" id="overload-warning-text">⚠️ You're pushing hard today.</p>
+            </div>
+
+            <!-- AI Dynamic Advice -->
+            <div class="day-ai-card hidden" id="day-ai-card">
+              <p class="day-ai-text" id="day-ai-text"></p>
+            </div>
+
+            <!-- Time Grid -->
+            <div class="time-grid-container">
+              <div class="time-grid" id="time-grid"></div>
+            </div>
+
+            <!-- Add Event Sheet -->
+            <div class="add-event-sheet hidden" id="add-event-sheet">
+              <p class="add-event-sheet-title">New Event</p>
+              <input type="text" class="field-input" id="sheet-event-name" placeholder="Event name..." />
+              <div class="sheet-time-row">
+                <div class="sleep-time-field">
+                  <label class="field-label">Start</label>
+                  <input type="time" class="field-input" id="sheet-start-time" />
+                </div>
+                <div class="sleep-time-field">
+                  <label class="field-label">End</label>
+                  <input type="time" class="field-input" id="sheet-end-time" />
+                </div>
+              </div>
+              <div class="event-category-row" id="sheet-category-row">
+                <button class="event-cat-btn active" data-cat="study">📚 Study</button>
+                <button class="event-cat-btn" data-cat="sleep">😴 Sleep</button>
+                <button class="event-cat-btn" data-cat="personal">🌸 Personal</button>
+                <button class="event-cat-btn" data-cat="physics">⚡ Physics</button>
+                <button class="event-cat-btn" data-cat="maths">📐 Maths</button>
+                <button class="event-cat-btn" data-cat="furthermaths">∑ Further Maths</button>
+                <button class="event-cat-btn" data-cat="economics">📊 Economics</button>
+                <button class="event-cat-btn" data-cat="eat">🍽️ Eat</button>
+                <button class="event-cat-btn" data-cat="other">• Other</button>
+              </div>
+              <div class="sheet-btn-row">
+                <button class="danger-btn" id="sheet-cancel-btn">Cancel</button>
+                <button class="primary-btn" id="sheet-confirm-btn">Add</button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-btn" onclick="showScreen('home-screen')">🏠 Home</button>
+          <button class="nav-btn" onclick="showScreen('log-screen')">📝 Log</button>
+          <button class="nav-btn active" onclick="showScreen('calendar-screen')">📅 Calendar</button>
+          <button class="nav-btn" onclick="showScreen('insights-screen')">✦ Insights</button>
+        </div>
+      </div>
+
 
     </div>
     <script src="app.js"></script>

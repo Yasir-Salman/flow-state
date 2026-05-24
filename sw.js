@@ -1,4 +1,4 @@
-const CACHE_NAME = 'flowstate-v1';
+const CACHE_NAME = 'flowstate-v2';
 const ASSETS = [
   '/',
   '/index.html',
@@ -7,7 +7,6 @@ const ASSETS = [
   '/manifest.json',
 ];
 
-// Install — cache all core files
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
@@ -15,7 +14,6 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Activate — clean up old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -27,11 +25,9 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch — serve from cache, fall back to network
 self.addEventListener('fetch', event => {
+  // Always fetch fresh from network, fall back to cache
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      return cached || fetch(event.request);
-    })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
