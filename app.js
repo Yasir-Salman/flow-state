@@ -198,6 +198,7 @@ window.addEventListener('load', () => {
   if (userData) {
     showScreen('home-screen');
     setupNotifications();
+    syncTodayToSupabase();
   } else {
     showScreen('setup-screen');
   }
@@ -408,6 +409,10 @@ document.getElementById('save-log-btn').addEventListener('click', () => {
   const msg = document.getElementById('log-saved-msg');
   msg.classList.remove('hidden');
   setTimeout(() => msg.classList.add('hidden'), 3000);
+
+  // Force sync after logging
+  localStorage.removeItem('flowstate-last-sync');
+  syncTodayToSupabase();
 });
 
 // ── Load today's log if it exists ──
@@ -1398,4 +1403,62 @@ function getOfflineAdvice(phase, daysUntilExam) {
     luteal: `${urgency}your energy will dip as the days go on, so front-load your study sessions in the morning. Be kind to yourself in the evenings.`,
   };
   return phaseAdvice[phase];
+}
+
+// ── Device ID ──
+function getDeviceId() {
+  let id = localStorage.getItem('flowstate-device-id');
+  if (!id) {
+    id = 'device_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    localStorage.setItem('flowstate-device-id', id);
+  }
+  return id;
+}
+
+// ── Daily Sync to Supabase ──
+async function syncTodayToSupabase() {
+  const today = new Date().toISOString().split('T')[0];
+  const lastSync = localStorage.getItem('flowstate-last-sync');
+
+  // Only sync once per day
+  if (lastSync === today) return;
+
+  const userData = JSON.parse(localStorage.getItem('flowstate-user'));
+  if (!userData) return;
+
+  const logs = JSON.parse(localStorage.getItem('flowstate-logs') || '{}');
+  const todayLog = logs[today] || {};
+  const calEvents = getCalEvents();
+  const todayEvents = calEvents[today] || [];
+  const cycleData = getCycleData();
+
+  const sleepHours = getSleepHours(todayLog.bedtime, todayLog.waketime);
+
+  try {
+    const response = await fetch('/api/sync-log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        device_id: getDeviceId(),
+        log_date: today,
+        flow: todayLog.flow || null,
+        mood: todayLog.mood || null,
+        sleep: todayLog.sleep || null,
+        symptoms: todayLog.symptoms || [],
+        bedtime: todayLog.bedtime || null,
+        waketime: todayLog.waketime || null,
+        sleep_hours: sleepHours,
+        cycle_day: cycleData?.cycleDay || null,
+        cycle_phase: cycleData?.phase || null,
+        calendar_events: todayEvents,
+      }),
+    });
+
+    if (response.ok) {
+      localStorage.setItem('flowstate-last-sync', today);
+      console.log('Synced to Supabase');
+    }
+  } catch (err) {
+    console.log('Sync failed silently:', err);
+  }
 }
