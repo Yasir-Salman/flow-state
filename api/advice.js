@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         messages: [
           {
             role: 'system',
-            content: 'You are a caring, warm assistant inside a personal period tracking app called Flow State, built for a girl named Aelya who is preparing for her A-level CAIE exams. Be specific, warm, and practical. Never be generic.',
+            content: 'You are a caring, warm assistant inside a personal period tracking app called Flow State, built for students who are managing their cycle alongside their studies. Be specific, warm, and practical. Address the user by their name when provided. Never be generic.',
           },
           {
             role: 'user',

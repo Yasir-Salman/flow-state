@@ -138,10 +138,7 @@
               <button class="chip" data-group="mood" data-value="happy">😊 Happy</button>
               <button class="chip" data-group="mood" data-value="calm">😌 Calm</button>
               <button class="chip" data-group="mood" data-value="moody">🌧️ Moody</button>
-              <button class="chip" data-group="mood" data-value="irritable">😤 Gussa</button>
-              <button class="chip" data-group="mood" data-value="wantboyfriend">🥺 Want to talk to boyfrienddd</button>
               <button class="chip" data-group="mood" data-value="anxious">😰 Anxious</button>
-              <button class="chip" data-group="mood" data-value="sad">😔 Yasir im sad</button>
               <button class="chip" data-group="mood" data-value="energetic">⚡ Energetic</button>
             </div>
           </div>
@@ -150,14 +147,14 @@
           <div class="log-section">
             <p class="log-section-title">Symptoms <span class="log-hint">(select all that apply)</span></p>
             <div class="chip-row" id="symptom-chips">
-              <button class="chip multi" data-group="symptoms" data-value="paitdard">🔴 Pait mein dard ho raha hai!!</button>
-              <button class="chip multi" data-group="symptoms" data-value="thakan">😮‍💨 mein thak gayi</button>
+              <button class="chip multi" data-group="symptoms" data-value="paitdard">🔴 Stomach hurts!!</button>
+              <button class="chip multi" data-group="symptoms" data-value="thakan">😮‍💨 im so tired </button>
               <button class="chip multi" data-group="symptoms" data-value="bistarh">🛏️ i wanna sleep</button>
               <button class="chip multi" data-group="symptoms" data-value="headache">🤕 Headache</button>
               <button class="chip multi" data-group="symptoms" data-value="bloating">💨 Bloating</button>
               <button class="chip multi" data-group="symptoms" data-value="nausea">🤢 Nausea</button>
               <button class="chip multi" data-group="symptoms" data-value="backache">💢 Backache</button>
-              <button class="chip multi" data-group="symptoms" data-value="none">✅ theek hun</button>
+              <button class="chip multi" data-group="symptoms" data-value="none">✅ just fine </button>
             </div>
           </div>
 
@@ -168,8 +165,8 @@
               <button class="chip" data-group="sleep" data-value="great">🌟 Great</button>
               <button class="chip" data-group="sleep" data-value="good">😊 Good</button>
               <button class="chip" data-group="sleep" data-value="okay">😐 meh</button>
-              <button class="chip" data-group="sleep" data-value="wokeup">💔 Raat ko uthna para kuch dafa. Boyfriend didnt reply</button>
-              <button class="chip" data-group="sleep" data-value="wantedboyfriend">📱 Up at 3am, texted boyfrienddd</button>
+              <button class="chip" data-group="sleep" data-value="wokeup">💔 Tossed and Turned half the night!</button>
+              <button class="chip" data-group="sleep" data-value="wantedboyfriend">📱 Up at 3am, started contemplating life choices</button>
               <button class="chip" data-group="sleep" data-value="poor">😣 Poor</button>
             </div>
           </div>
@@ -374,7 +371,7 @@
               <div class="notif-info-row">
                 <span class="notif-info-icon">🙄</span>
                 <div>
-                  <p class="notif-info-label">Yasir's lame joke of the day</p>
+                  <p class="notif-info-label">Dad joke of the day</p>
                   <p class="field-hint">2-3 times a week, random time</p>
                 </div>
               </div>
@@ -382,6 +379,59 @@
 
             <button class="primary-btn" id="notif-save-btn">Save Notification Settings</button>
             <p class="log-saved-msg hidden" id="notif-saved-msg">✓ Notification settings saved</p>
+          </div>
+
+          <!-- Custom Categories -->
+          <div class="settings-section">
+            <p class="settings-section-title">Custom Calendar Categories</p>
+            <p class="field-hint" style="margin-top: -8px;">Add your own subjects or activity types to the calendar.</p>
+
+            <div id="custom-categories-list"></div>
+
+            <div class="settings-field">
+              <label class="field-label">Category name</label>
+              <input type="text" id="new-category-name" class="field-input" placeholder="e.g. Chemistry" />
+            </div>
+            <div class="settings-field">
+              <label class="field-label">Emoji</label>
+              <input type="text" id="new-category-emoji" class="field-input" placeholder="e.g. 🧪" maxlength="2" />
+            </div>
+
+            <div class="settings-field">
+              <label class="field-label">Color</label>
+              <div class="color-picker-row">
+                <input type="color" id="new-category-color" class="color-picker-input" value="#c084fc" />
+                <span class="color-picker-label">Pick a color for calendar blocks</span>
+              </div>
+            </div>
+
+            <button class="primary-btn" id="add-category-btn">Add Category</button>
+          </div>
+
+          <!-- Important Dates -->
+          <div class="settings-section">
+            <p class="settings-section-title">Important Dates</p>
+            <p class="field-hint" style="margin-top: -8px;">Exams, deadlines, events — the app uses these to tailor advice.</p>
+
+            <div id="important-dates-list"></div>
+
+            <div class="settings-field">
+              <label class="field-label">Date</label>
+              <input type="date" id="new-date-input" class="field-input" />
+            </div>
+            <div class="settings-field">
+              <label class="field-label">Label</label>
+              <input type="text" id="new-date-label" class="field-input" placeholder="e.g. Biology Exam" />
+            </div>
+            <div class="settings-field">
+              <label class="field-label">Time <span class="log-hint">(optional)</span></label>
+              <input type="time" id="new-date-time" class="field-input" />
+            </div>
+            <div class="settings-field">
+              <label class="field-label">Duration <span class="log-hint">(optional, e.g. 2h 30m)</span></label>
+              <input type="text" id="new-date-duration" class="field-input" placeholder="e.g. 1h 30m" />
+            </div>
+            <button class="primary-btn" id="add-date-btn">Add Date</button>
           </div>
           
           <!-- Danger Zone -->
@@ -482,10 +532,7 @@
                 <button class="event-cat-btn active" data-cat="study">📚 Study</button>
                 <button class="event-cat-btn" data-cat="sleep">😴 Sleep</button>
                 <button class="event-cat-btn" data-cat="personal">🌸 Personal</button>
-                <button class="event-cat-btn" data-cat="physics">⚡ Physics</button>
-                <button class="event-cat-btn" data-cat="maths">📐 Maths</button>
-                <button class="event-cat-btn" data-cat="furthermaths">∑ Further Maths</button>
-                <button class="event-cat-btn" data-cat="economics">📊 Economics</button>
+                <button class="event-cat-btn" data-cat="economics">📊 Work</button>
                 <button class="event-cat-btn" data-cat="eat">🍽️ Eat</button>
                 <button class="event-cat-btn" data-cat="other">• Other</button>
               </div>

@@ -198,7 +198,6 @@ window.addEventListener('load', () => {
   if (userData) {
     showScreen('home-screen');
     setupNotifications();
-    syncTodayToSupabase();
   } else {
     showScreen('setup-screen');
   }
@@ -270,56 +269,56 @@ const tsSleepMap = [
   {
     minHours: 8,
     qualities: ['great'],
-    song: 'Lover',
-    album: 'Lover',
-    albumColor: '#ffb7c5',
-    albumEmoji: '🌈',
-    spotify: 'https://open.spotify.com/track/1dGr1c8CrMLDpV6mPbImSI',
+    song: 'Shake It Off',
+    album: '1989',
+    albumColor: '#a8d8ea',
+    albumEmoji: '🏙️',
+    spotify: 'https://open.spotify.com/track/5DSXAxEEOjOcpNZn9KKNdz',
   },
   {
     minHours: 7,
     qualities: ['great', 'good'],
-    song: 'Cruel Summer',
-    album: '1989',
-    albumColor: '#a8d8ea',
-    albumEmoji: '🏙️',
-    spotify: 'https://open.spotify.com/track/1BxfuPKGuaTgP7aM0Bbdwr',
+    song: 'Love Story',
+    album: 'Fearless',
+    albumColor: '#f6d365',
+    albumEmoji: '✨',
+    spotify: 'https://open.spotify.com/track/6jG2YzhxptolDzLHTGLt7q',
   },
   {
     minHours: 6,
     qualities: ['good', 'okay'],
-    song: 'Seven',
+    song: 'Cardigan',
     album: 'Folklore',
     albumColor: '#c9c9c9',
     albumEmoji: '🌲',
-    spotify: 'https://open.spotify.com/track/1o0CGHCmRNMNVXsGHfEFEu',
+    spotify: 'https://open.spotify.com/track/4R2kfaDFhslZEMJqAFNpdd',
   },
   {
     minHours: 5,
     qualities: ['okay', 'wokeup'],
-    song: 'this is me trying',
-    album: 'Folklore',
-    albumColor: '#c9c9c9',
-    albumEmoji: '🌫️',
-    spotify: 'https://open.spotify.com/track/4vMFEMDMDPGMxpGwSEKHsw',
+    song: 'Clean',
+    album: '1989',
+    albumColor: '#a8d8ea',
+    albumEmoji: '🌧️',
+    spotify: 'https://open.spotify.com/track/5ohMkGFfwsABHSMLbKZFAZ',
   },
   {
     minHours: 4,
     qualities: ['wokeup', 'wantedboyfriend'],
-    song: 'Would\'ve, Could\'ve, Should\'ve',
-    album: 'Midnights',
-    albumColor: '#1a1a2e',
-    albumEmoji: '🌙',
-    spotify: 'https://open.spotify.com/track/4vMFEMDMDPGMxpGwSEKHsw',
+    song: 'All Too Well',
+    album: 'Red',
+    albumColor: '#c0392b',
+    albumEmoji: '🍂',
+    spotify: 'https://open.spotify.com/track/5enxwA8aAbwZbf5qCHORXi',
   },
   {
     minHours: 0,
     qualities: ['poor', 'wantedboyfriend', 'wokeup'],
-    song: 'How Did It End?',
-    album: 'The Tortured Poets Department',
-    albumColor: '#d4c5a9',
-    albumEmoji: '🖊️',
-    spotify: 'https://open.spotify.com/track/3cQ2DCOcFMiGFe2mcVJFHX',
+    song: 'The 1',
+    album: 'Folklore',
+    albumColor: '#c9c9c9',
+    albumEmoji: '🌫️',
+    spotify: 'https://open.spotify.com/track/0sY6ZRqy5xFmaM3u2EQoAR',
   },
 ];
 
@@ -410,9 +409,6 @@ document.getElementById('save-log-btn').addEventListener('click', () => {
   msg.classList.remove('hidden');
   setTimeout(() => msg.classList.add('hidden'), 3000);
 
-  // Force sync after logging
-  localStorage.removeItem('flowstate-last-sync');
-  syncTodayToSupabase();
 });
 
 // ── Load today's log if it exists ──
@@ -579,6 +575,8 @@ function loadSettings() {
   document.getElementById('settings-date').value = userData.lastPeriodStart;
   settingsCycleLength = userData.cycleLength;
   document.getElementById('settings-cycle-display').textContent = settingsCycleLength;
+  renderImportantDatesList();
+  renderCustomCategoriesList();
 }
 
 // Settings cycle stepper
@@ -810,7 +808,7 @@ function scheduleNotifications() {
     const joke = lameJokes[jokeIndex];
 
     const jokeTimer = setTimeout(() => {
-      new Notification('Yasir has a joke for you 🙄', {
+      new Notification('There is a very funny joke for you 🙄', {
         body: joke,
         icon: '/icon-192.png',
       });
@@ -894,16 +892,23 @@ if ('serviceWorker' in navigator) {
 
 // ── Calendar ──
 
-const EXAM_DATES = [
-  { date: '2026-05-06', label: 'Math Stats', time: '1:00 PM', duration: '2h 15m' },
-  { date: '2026-05-11', label: 'Physics', time: '8:00 AM', duration: '3h' },
-  { date: '2026-05-19', label: 'Economics', time: '8:00 AM', duration: '3h' },
-  { date: '2026-05-20', label: 'Physics Exp', time: '8:00 AM', duration: '2h 15m' },
-  { date: '2026-05-21', label: 'Further Maths Mech', time: '1:00 PM', duration: '2h 30m' },
-  { date: '2026-05-25', label: 'Further Maths Pure', time: '1:00 PM', duration: '3h 00m' },
-  { date: '2026-06-05', label: 'Economics MCQs', time: '8:00 AM', duration: '2h 15m' },
-  { date: '2026-06-08', label: 'Math Pure', time: '1:00 PM', duration: '2h 50m' },
-];
+function getImportantDates() {
+  return JSON.parse(localStorage.getItem('flowstate-important-dates') || '[]');
+}
+
+function saveImportantDates(dates) {
+  localStorage.setItem('flowstate-important-dates', JSON.stringify(dates));
+}
+
+// Wrapper so rest of code still works — maps important dates to EXAM_DATES shape
+function getExamDates() {
+  return getImportantDates().map(d => ({
+    date: d.date,
+    label: d.label,
+    time: d.time || '',
+    duration: d.duration || '',
+  }));
+}
 
 const EVENT_COLORS = {
   study: '#a78bfa',
@@ -915,6 +920,7 @@ const EVENT_COLORS = {
   economics: '#f97316',
   eat: '#fb7185',
   other: '#94a3b8',
+  exam: '#f87171',
 };
 
 const STUDY_CATS = ['study', 'physics', 'maths', 'furthermaths', 'economics'];
@@ -968,9 +974,10 @@ function getStudyHoursForDay(dateStr) {
 
 function isOverloaded(dateStr, events, phase) {
   const studyHours = getStudyHoursForDay(dateStr);
-  const examStart = new Date('2026-05-06');
+  const examDates = getExamDates();
   const targetDate = new Date(dateStr);
-  const isExamPeriod = targetDate >= examStart;
+  const isExamPeriod = examDates.some(e => new Date(e.date) >= targetDate &&
+    new Date(e.date) <= new Date(targetDate.getTime() + 30 * 24 * 60 * 60 * 1000));
   const isHeavyPhase = phase === 'luteal' || phase === 'menstruation';
 
   if (isExamPeriod) {
@@ -1007,7 +1014,7 @@ function renderCalendar() {
     const phase = getPhaseForDate(dateStr);
     const dayEvents = events[dateStr] || [];
     const overloaded = isOverloaded(dateStr, events, phase);
-    const exam = EXAM_DATES.find(e => e.date === dateStr);
+    const exam = getExamDates().find(e => e.date === dateStr);
 
     const cell = document.createElement('div');
     cell.classList.add('cal-day');
@@ -1062,7 +1069,7 @@ function openDayView(dateStr) {
   const dayView = document.getElementById('day-view');
   dayView.classList.remove('hidden');
 
-  const exam = EXAM_DATES.find(e => e.date === dateStr);
+  const exam = getExamDates().find(e => e.date === dateStr);
   const date = new Date(dateStr + 'T00:00:00');
   const formatted = date.toLocaleDateString('en-US', {
     weekday: 'long', month: 'long', day: 'numeric'
@@ -1087,6 +1094,31 @@ function renderTimeGrid(dateStr) {
 
   const events = getCalEvents();
   const dayEvents = (events[dateStr] || []).filter(e => e.startTime && e.endTime);
+    // Auto-inject important dates as event blocks
+  const examForDay = getExamDates().find(e => e.date === dateStr);
+  if (examForDay && examForDay.time) {
+    const [h, m] = examForDay.time.split(':').map(Number);
+    const durationMatch = examForDay.duration?.match(/(\d+)h\s*(\d+)?m?/);
+    let durationMins = 60; // default 1 hour
+    if (durationMatch) {
+      durationMins = (parseInt(durationMatch[1]) || 0) * 60 + (parseInt(durationMatch[2]) || 0);
+    }
+    const endMins = h * 60 + m + durationMins;
+    const endH = String(Math.floor(endMins / 60)).padStart(2, '0');
+    const endM = String(endMins % 60).padStart(2, '0');
+
+    const examEvent = {
+      text: examForDay.label,
+      cat: 'exam',
+      startTime: examForDay.time,
+      endTime: `${endH}:${endM}`,
+      isExam: true,
+    };
+
+    // Only inject if not already manually added
+    const alreadyExists = dayEvents.some(e => e.text === examForDay.label && e.isExam);
+    if (!alreadyExists) dayEvents.unshift(examEvent);
+  }
 
   // Total grid height
   const totalHours = GRID_END_HOUR - GRID_START_HOUR;
@@ -1189,10 +1221,19 @@ function checkOverloadWarning(dateStr) {
   const studyHours = getStudyHoursForDay(dateStr);
   const overloaded = isOverloaded(dateStr, events, phase);
   const isHeavyPhase = phase === 'luteal' || phase === 'menstruation';
-  const examStart = new Date('2026-05-06');
+  const examDates = getExamDates();
   const targetDate = new Date(dateStr);
-  const daysUntilExam = Math.ceil((examStart - new Date()) / (1000 * 60 * 60 * 24));
-  const isExamPeriod = targetDate >= examStart;
+  const nextExam = examDates
+    .filter(e => new Date(e.date) >= new Date())
+    .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+  const daysUntilExam = nextExam
+    ? Math.ceil((new Date(nextExam.date) - new Date()) / (1000 * 60 * 60 * 24))
+    : 999;
+  const isExamPeriod = examDates.some(e => {
+    const ed = new Date(e.date);
+    return ed >= targetDate &&
+      ed <= new Date(targetDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+  });
 
   const warningEl = document.getElementById('overload-warning');
   const warningText = document.getElementById('overload-warning-text');
@@ -1346,6 +1387,7 @@ showScreen = function(screenId) {
     renderCalendar();
     openDayView(calSelectedDate);
     fetchAIAdvice();
+    renderSheetCategories();
   }
 };
 
@@ -1357,19 +1399,21 @@ async function fetchAIAdvice() {
   const today = new Date().toISOString().split('T')[0];
   const events = getCalEvents();
   const todayEvents = events[today] || [];
-  const exam = EXAM_DATES.find(e => e.date === today);
-  const daysUntilFirstExam = Math.ceil(
-    (new Date('2026-05-06') - new Date()) / (1000 * 60 * 60 * 24)
-  );
+  const userData = JSON.parse(localStorage.getItem('flowstate-user'));
+  const userName = userData?.name || 'there';
+  const importantDates = JSON.parse(localStorage.getItem('flowstate-important-dates') || '[]');
+  const upcomingDates = importantDates
+    .filter(d => new Date(d.date) >= new Date())
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 3);
 
-  const prompt = `Today's info for Aelya:
+  const prompt = `Today's info for ${userName}:
 - Cycle day: ${data.cycleDay} of ${data.cycleLength}
 - Phase: ${data.phase}
-- Days until first exam (Math Stats, May 6 2026): ${daysUntilFirstExam}
-- Today's exam: ${exam ? `${exam.label} at ${exam.time} (${exam.duration})` : 'None'}
+- Upcoming important dates: ${upcomingDates.length > 0 ? upcomingDates.map(d => `${d.label} on ${d.date}`).join(', ') : 'None set'}
 - Today's planned events: ${todayEvents.length > 0 ? todayEvents.map(e => `${e.text} (${e.cat}) ${e.startTime ? e.startTime + '–' + e.endTime : ''}`).join(', ') : 'None yet'}
 
-Write 2-3 sentences of warm, specific, practical advice for Aelya today. Consider her cycle phase, exam pressure, and what she has planned. If she has an exam today, acknowledge it. Speak directly to her.`;
+Write 2-3 sentences of warm, specific, practical advice for ${userName} today. Consider her cycle phase, any upcoming important dates, and what she has planned. Speak directly to her by name.`;
 
   const adviceEl = document.getElementById('ai-advice-text');
   adviceEl.textContent = 'Getting your advice...';
@@ -1386,79 +1430,194 @@ Write 2-3 sentences of warm, specific, practical advice for Aelya today. Conside
     if (result.advice) {
       adviceEl.textContent = result.advice;
     } else {
-      adviceEl.textContent = getOfflineAdvice(data.phase, daysUntilFirstExam);
+      adviceEl.textContent = getOfflineAdvice(data.phase, upcomingDates);
     }
   } catch {
-    adviceEl.textContent = getOfflineAdvice(data.phase, daysUntilFirstExam);
+    adviceEl.textContent = getOfflineAdvice(data.phase, upcomingDates);
   }
 }
 
-function getOfflineAdvice(phase, daysUntilExam) {
-  const urgency = daysUntilExam <= 7 ? 'Exams are almost here — ' :
-    daysUntilExam <= 30 ? 'With exams approaching, ' : '';
+function getOfflineAdvice(phase, upcomingDates) {
+  const nextDate = upcomingDates?.[0];
+  const urgency = nextDate ? `With ${nextDate.label} coming up on ${nextDate.date}, ` : '';
   const phaseAdvice = {
-    menstruation: `${urgency}your energy is lower right now so prioritise your most important subject first while you still have focus. Short sessions with proper breaks will serve you better than pushing through fatigue.`,
-    follicular: `${urgency}your mind is sharp and energy is building — this is a great time to tackle the harder topics. Use this phase to get ahead while you feel your best.`,
-    ovulation: `${urgency}you are at your peak mentally and socially. Use this energy for your most demanding revision and practice papers.`,
+    menstruation: `${urgency}your energy is lower right now so prioritise your most important task first while you still have focus. Short sessions with proper breaks will serve you better than pushing through fatigue.`,
+    follicular: `${urgency}your mind is sharp and energy is building — this is a great time to tackle harder topics. Use this phase to get ahead while you feel your best.`,
+    ovulation: `${urgency}you are at your peak mentally. Use this energy for your most demanding work and studying.`,
     luteal: `${urgency}your energy will dip as the days go on, so front-load your study sessions in the morning. Be kind to yourself in the evenings.`,
   };
   return phaseAdvice[phase];
 }
 
-// ── Device ID ──
-function getDeviceId() {
-  let id = localStorage.getItem('flowstate-device-id');
-  if (!id) {
-    id = 'device_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-    localStorage.setItem('flowstate-device-id', id);
+// ── Important Dates Settings ──
+function renderImportantDatesList() {
+  const dates = getImportantDates();
+  const list = document.getElementById('important-dates-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (dates.length === 0) {
+    list.innerHTML = '<p style="color:#555; font-size:13px; margin-bottom:8px;">No important dates added yet.</p>';
+    return;
   }
-  return id;
-}
 
-// ── Daily Sync to Supabase ──
-async function syncTodayToSupabase() {
-  const today = new Date().toISOString().split('T')[0];
-  const lastSync = localStorage.getItem('flowstate-last-sync');
+  dates.forEach((d, index) => {
+    const item = document.createElement('div');
+    item.classList.add('important-date-item');
 
-  // Only sync once per day
-  if (lastSync === today) return;
+    const info = document.createElement('div');
+    info.classList.add('important-date-info');
 
-  const userData = JSON.parse(localStorage.getItem('flowstate-user'));
-  if (!userData) return;
+    const label = document.createElement('p');
+    label.classList.add('important-date-label');
+    label.textContent = d.label;
 
-  const logs = JSON.parse(localStorage.getItem('flowstate-logs') || '{}');
-  const todayLog = logs[today] || {};
-  const calEvents = getCalEvents();
-  const todayEvents = calEvents[today] || [];
-  const cycleData = getCycleData();
+    const sub = document.createElement('p');
+    sub.classList.add('important-date-sub');
+    sub.textContent = d.date + (d.time ? ` · ${d.time}` : '') + (d.duration ? ` (${d.duration})` : '');
 
-  const sleepHours = getSleepHours(todayLog.bedtime, todayLog.waketime);
-
-  try {
-    const response = await fetch('/api/sync-log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        device_id: getDeviceId(),
-        log_date: today,
-        flow: todayLog.flow || null,
-        mood: todayLog.mood || null,
-        sleep: todayLog.sleep || null,
-        symptoms: todayLog.symptoms || [],
-        bedtime: todayLog.bedtime || null,
-        waketime: todayLog.waketime || null,
-        sleep_hours: sleepHours,
-        cycle_day: cycleData?.cycleDay || null,
-        cycle_phase: cycleData?.phase || null,
-        calendar_events: todayEvents,
-      }),
+    const del = document.createElement('button');
+    del.classList.add('important-date-delete');
+    del.textContent = '✕';
+    del.addEventListener('click', () => {
+      const all = getImportantDates();
+      all.splice(index, 1);
+      saveImportantDates(all);
+      renderImportantDatesList();
     });
 
-    if (response.ok) {
-      localStorage.setItem('flowstate-last-sync', today);
-      console.log('Synced to Supabase');
-    }
-  } catch (err) {
-    console.log('Sync failed silently:', err);
-  }
+    info.appendChild(label);
+    info.appendChild(sub);
+    item.appendChild(info);
+    item.appendChild(del);
+    list.appendChild(item);
+  });
 }
+
+document.getElementById('add-date-btn').addEventListener('click', () => {
+  const date = document.getElementById('new-date-input').value;
+  const label = document.getElementById('new-date-label').value.trim();
+  const time = document.getElementById('new-date-time').value;
+  const duration = document.getElementById('new-date-duration').value.trim();
+
+  if (!date || !label) {
+    alert('Please fill in both date and label.');
+    return;
+  }
+
+  const dates = getImportantDates();
+  dates.push({ date, label, time: time || null, duration: duration || null });
+  dates.sort((a, b) => new Date(a.date) - new Date(b.date));
+  saveImportantDates(dates);
+
+  document.getElementById('new-date-input').value = '';
+  document.getElementById('new-date-label').value = '';
+  document.getElementById('new-date-time').value = '';
+  document.getElementById('new-date-duration').value = '';
+
+  renderImportantDatesList();
+});
+
+// ── Custom Categories ──
+function getCustomCategories() {
+  return JSON.parse(localStorage.getItem('flowstate-custom-cats') || '[]');
+}
+
+function saveCustomCategories(cats) {
+  localStorage.setItem('flowstate-custom-cats', JSON.stringify(cats));
+}
+
+function renderCustomCategoriesList() {
+  const cats = getCustomCategories();
+  const list = document.getElementById('custom-categories-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (cats.length === 0) {
+    list.innerHTML = '<p style="color:#555; font-size:13px; margin-bottom:8px;">No custom categories yet.</p>';
+    return;
+  }
+
+  cats.forEach((cat, index) => {
+    const item = document.createElement('div');
+    item.classList.add('custom-category-item');
+
+    const label = document.createElement('p');
+    label.classList.add('custom-category-label');
+    label.innerHTML = `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${cat.color};margin-right:8px;vertical-align:middle;"></span>${cat.emoji} ${cat.name}`;
+
+    const del = document.createElement('button');
+    del.classList.add('custom-category-delete');
+    del.textContent = '✕';
+    del.addEventListener('click', () => {
+      const all = getCustomCategories();
+      all.splice(index, 1);
+      saveCustomCategories(all);
+      renderCustomCategoriesList();
+      renderSheetCategories();
+    });
+
+    item.appendChild(label);
+    item.appendChild(del);
+    list.appendChild(item);
+  });
+}
+
+function renderSheetCategories() {
+  const row = document.getElementById('sheet-category-row');
+  if (!row) return;
+
+  // Remove any previously injected custom buttons
+  row.querySelectorAll('.custom-cat-btn').forEach(b => b.remove());
+
+  const cats = getCustomCategories();
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.classList.add('event-cat-btn', 'custom-cat-btn');
+    btn.dataset.cat = cat.name.toLowerCase().replace(/\s+/g, '_');
+    btn.textContent = `${cat.emoji} ${cat.name}`;
+
+    // Add color for this category
+    EVENT_COLORS[btn.dataset.cat] = cat.color || '#c084fc';
+
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#sheet-category-row .event-cat-btn')
+        .forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      sheetSelectedCat = btn.dataset.cat;
+    });
+
+    row.appendChild(btn);
+  });
+}
+
+document.getElementById('add-category-btn').addEventListener('click', () => {
+  const name = document.getElementById('new-category-name').value.trim();
+  const emoji = document.getElementById('new-category-emoji').value.trim();
+
+  if (!name) {
+    alert('Please enter a category name.');
+    return;
+  }
+
+  const cats = getCustomCategories();
+
+  // Prevent duplicates
+  if (cats.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+    alert('That category already exists.');
+    return;
+  }
+
+  // Assign a color from a rotation
+  const color = document.getElementById('new-category-color').value || '#c084fc';
+
+  cats.push({ name, emoji: emoji || '•', color });
+  saveCustomCategories(cats);
+
+  document.getElementById('new-category-name').value = '';
+  document.getElementById('new-category-emoji').value = '';
+  document.getElementById('new-category-color').value = '#c084fc';
+
+  renderCustomCategoriesList();
+  renderSheetCategories();
+});
